@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<playground version='6.0' target-platform='ios'>
+    <pages>
+        <page name='Basis'/>
+        <page name='Basis Operators'/>
+        <page name='String and Characters'/>
+        <page name='Collection Types'/>
+        <page name='Control Flow'/>
+        <page name='Function'/>
+        <page name='Closures'/>
+    </pages>
+</playground>
