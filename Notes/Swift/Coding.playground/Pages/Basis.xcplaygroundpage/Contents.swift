@@ -122,7 +122,7 @@ catch
 *	断言
 */
 
-// 类似于触发器，当满足断言内的条件时才会执行其内代码
+// 当满足断言内的条件时才会执行其内代码
 var assertionNumber = 3
 assert( assertionNumber<5, "value < 5")
 

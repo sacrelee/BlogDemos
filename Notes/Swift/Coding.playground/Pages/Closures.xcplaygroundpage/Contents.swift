@@ -44,5 +44,28 @@ let strings = numbers.map { (var number) -> String in
 
 print(strings)
 
+// 捕获值（Capturing Values）
+func makeIncrementor(forIncrement amount:Int)->()->Int
+{
+   var runningTotal = 0
+    func incrementor()->Int  // 此函数中的变量来自外部函数
+    {
+        runningTotal += amount
+        return runningTotal
+    }
+    return incrementor
+}
+let incrementByTen = makeIncrementor(forIncrement: 10) // 此常量指向闭包
+incrementByTen() // 第一次调用，返回初始值
+incrementByTen()  // 外部函数的两个变量没有被释放，下同
+incrementByTen()
+
+let incrementBySeven = makeIncrementor(forIncrement: 7)
+incrementBySeven() // 这是另外一个increment步进是7，与步进10的函数不相同
+incrementByTen()
+
+// 闭包同属引用类型,这里的aRe和incrementByTen均指向同一个闭包incrementor
+let aRe = incrementByTen
+aRe()
 
 
