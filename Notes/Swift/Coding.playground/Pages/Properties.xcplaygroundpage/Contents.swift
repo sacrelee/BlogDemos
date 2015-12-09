@@ -96,12 +96,71 @@ sc.totalStep = 199
 // 全局变量类似于延迟存储属性不过它们之前不需要加lazy， 而局部变量不会被延迟处理
 // 可以像处理属性一样的去处理全局/局部变量，
 
-
 // 类型属性
+// 可以用来设置实例间被用到的统一值，类似这个属性可共有并且是静态数据类型
 
+struct InstanceStruct {  // 结构体
+    static var storedTypeProperty = "Struct"
+    static var computedTypeProperty:Int{
+       return 10
+    }
+}
 
+enum InstanceEnum {  // 枚举
+    static var storedTypeProperty = "Enum"
+    static var computedTypeProperty:Int{
+       return 20
+    }
+}
 
+class InstanceClass {  // 类
+    static var storedTypeProperty = "Class"
+    static var computedTypeProperty:Int{
+       return 30
+    }
+    
+    class var overrideableComputedTypeProperty:Int{  // class关键字允许子类对父类进行重写
+       return 300
+    }
+}
 
+InstanceStruct.storedTypeProperty = "Instance Struct"
+print("\(InstanceStruct.storedTypeProperty)")
+
+InstanceEnum.computedTypeProperty
+
+InstanceClass.computedTypeProperty
+InstanceClass.overrideableComputedTypeProperty
+
+// 一个例子
+struct StudentLevel {
+    static var level = "G"
+    var currentScore:Int = 0{
+        didSet{
+          switch ( currentScore - 60 ) / 10
+          {
+             case 3...4:
+              StudentLevel.level = "A"
+             case 2:
+              StudentLevel.level = "B"
+             case 1:
+              StudentLevel.level = "C"
+             case 0:
+              StudentLevel.level = "D"
+             default :
+              StudentLevel.level = "E"
+            }
+        }
+    }
+}
+
+// 通过实例改变此结构体的类型属性
+var sl = StudentLevel()
+sl.currentScore = 100
+print(StudentLevel.level)
+
+sl.currentScore = 0
+print(StudentLevel.level)
 
 
 
