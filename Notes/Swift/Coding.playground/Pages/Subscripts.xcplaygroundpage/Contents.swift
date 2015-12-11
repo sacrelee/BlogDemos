@@ -52,17 +52,13 @@ struct Student{
     }
     
     subscript( name :String?, score :Double)->String{
-        get{
+        
          assert( handleData(name, score: score),"Error Data")
              return name! + ":\(score)"
-        }
-        set{
-          assert( handleData(name, score: score), "Error Data")
-            description = name! + ":\(score)"
-        }
     }
 }
 
 let s = Student()
 
-print(s["",-123])
+print(s["🐶",59])
+//print(s["",-123]) // 这个会报错，因为-123不是正确的成绩
