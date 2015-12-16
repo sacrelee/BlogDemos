@@ -1,4 +1,4 @@
-import UIKit
+
 
 ///  构造过程
 // 构造过程是使用类，结构体，枚举等的一个准备过程，
@@ -175,7 +175,7 @@ print("\(sec.description)")
 /*
   两段式构造阶段
 
-“阶段 1
+阶段 1
 某个指定构造器或便利构造器被调用；
 完成新实例内存的分配，但此时内存还没有被初始化；
 指定构造器确保其所在类引入的所有存储型属性都已赋初值。存储型属性所属的内存完成初始化；
@@ -183,13 +183,77 @@ print("\(sec.description)")
 这个调用父类构造器的过程沿着构造器链一直往上执行，直到到达构造器链的最顶部；
 当到达了构造器链最顶部，且已确保所有实例包含的存储型属性都已经赋值，这个实例的内存被认为已经完全初始化。此时阶段1完成。
 
-
 阶段 2
 从顶部构造器链一直往下，每个构造器链中类的指定构造器都有机会进一步定制实例。构造器此时可以访问self、修改它的属性并调用实例方法等等。
-最终，任意构造器链中的便利构造器可以有机会定制实例和使用self。”
-
-摘录来自: 极客学院. “The Swift Programming Language 中文版”。 iBooks.
+最终，任意构造器链中的便利构造器可以有机会定制实例和使用self。
 
 */
+
+/// 构造器的继承和重写
+// 与OC不同，Swift中子类不会默认继承父类的构造器，子类仅会在确定且安全的情况下继承父类的构造器
+
+class Animal {   // 此类自动生成一个默认构造器，默认构造器通常是指定构造器
+    var numberOfLegs = 0
+    var description:String{
+      return "it has \(numberOfLegs) legs."
+    }
+}
+
+class Dog: Animal {
+    override init(){
+        super.init()
+        numberOfLegs = 4  // 子类只能给继承自父类的变量重新赋值，常量不可
+    }
+}
+
+let a = Animal()
+let d = Dog()
+print("\(a.description)")
+print("\(d.description)")
+
+// 自动构造器的继承
+
+/*
+  为子类引入新属性需要遵守：
+  规则1：如果子类没有定义任何指定构造器，它将自动继承所有父类的指定构造器
+  规则2：如果子类完成了所有父类指定构造器的实现，不管是通过规则1继承来的还是自定义实现的-它将自动继承所有父类的便利构造器。
+*/
+
+class Food {
+    
+    var name:String
+    init(name:String){
+      self.name = name
+    }
+    
+    convenience init(){
+        self.init(name:"[Unnamed]")
+    }
+}
+
+class RecipeIngredient: Food {
+    var quantity:Int
+    init(name:String, quantity:Int){
+      self.quantity = quantity  // 完成属性赋值
+      super.init(name: name)  // 向上代理父类的构造器
+    }
+    
+    // 于重写了父类的init(name:String) 构造器，所以要加 override
+    override convenience init(name: String) {
+        self.init(name:name, quantity:1)  // 此便利构造器简单的将任务代理给指定构造器
+    }
+}
+
+class ShoppingListItem: RecipeIngredient {
+    var purchased = false
+    var description:String{
+      var output = "\(name) x \(quantity)"
+      output += purchased ? "✔": "✘"
+      return output
+    }
+}
+
+//var 
+
 
 
