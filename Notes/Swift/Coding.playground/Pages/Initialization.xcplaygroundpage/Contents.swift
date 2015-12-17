@@ -253,7 +253,73 @@ class ShoppingListItem: RecipeIngredient {
     }
 }
 
-//var 
+var breakfastList = [
+     ShoppingListItem(),
+     ShoppingListItem(name: "sugar"),
+     ShoppingListItem(name: "egg", quantity: 6)
+]
+
+breakfastList[0].purchased = true
+breakfastList[0].name = "Orange Juice"
+print("\(breakfastList[0].description)")
+
+for sfi in breakfastList{
+   print("\(sfi.description)")
+}
+
+/// 可失败构造器
+struct Company{
+    var name:String
+    
+    init?(name:String){  // 这里name允许是空值，空值将返回空实例
+        if(name.isEmpty){ return nil}   // 空字符串"" 与nil是不同的概念
+        self.name = name
+    }
+}
+
+let goo = Company(name: "Google")
+print("\(goo!.name)")
+
+let co = Company(name: "")
+if co == nil{
+   print("it's a Instance！")
+}
+
+// 枚举类型的可失败构造器
+enum CodingLanguage{
+  case C, Swift, OC, JS, PHP
+    init?(coding:Character){
+        switch(coding){
+          case "C":
+            self = .C
+          case "S":
+            self = .Swift
+          case "O":
+            self = .OC
+          case "J":
+            self = .JS
+          case "P":
+            self = .JS
+          default :
+            return nil
+        }
+    }
+    
+}
+
+func isCodingLanguage( cl:CodingLanguage?)->Bool{
+    if cl == nil{
+        return false
+    }
+    return true
+}
+
+let cl0 = CodingLanguage(coding: "Q")  // 不属于枚举中的一个
+let cl1 = CodingLanguage(coding: "S")  // 属于枚举中的一个
+
+isCodingLanguage(cl0)
+isCodingLanguage(cl1)
+
 
 
 
