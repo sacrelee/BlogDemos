@@ -285,21 +285,21 @@ if co == nil{
    print("it's a Instance！")
 }
 
-// 枚举类型的可失败构造器
+/// 枚举类型的可失败构造器
 enum CodingLanguage{
-  case C, Swift, OC, JS, PHP
+  case C, SWIFT, OC, JS, PHP
     init?(coding:Character){
         switch(coding){
           case "C":
             self = .C
           case "S":
-            self = .Swift
+            self = .SWIFT
           case "O":
             self = .OC
           case "J":
             self = .JS
           case "P":
-            self = .JS
+            self = .PHP
           default :
             return nil
         }
@@ -320,6 +320,152 @@ let cl1 = CodingLanguage(coding: "S")  // 属于枚举中的一个
 isCodingLanguage(cl0)
 isCodingLanguage(cl1)
 
+// 带原始值的可失败构造器
+enum Coding:Character{
+    case C = "C", Swift = "S", OC = "O", JS = "J", PHP = "P"
+}
 
+// rawValue 默认参数，和枚举的原始值类型相同，如果匹配则init一个枚举成员，否则为nil
+let c1 = Coding(rawValue: "S")  // 默认值为S，init成功
+let c2 = Coding(rawValue: "X")  // 默认值为X，无对应，init失败
+
+/// 类的可失败构造器
+class Product{
+    var name:String!
+    init?(name:String){   // name有默认属性值nil，
+       self.name = name
+        if name.isEmpty{ return nil }  // 必须在构造失败前给name属性一个值
+    }
+}
+
+if let p = Product(name: "Mac"){
+   print("The Product name: \(p.name)")    // 如果构造成功，name属性一定是有值的
+}
+
+// 构造失败的传递
+// 可横向代理其它失败构造器，子类可以向上代理父类的可失败构造器，无论什么情况，一旦构造失败就不再执行以后的构造代码
+class CartItem:Product{
+    var quantity:Int!
+    
+    init?(name:String, quantity:Int){
+       super.init(name: name)   // 向上代理父类的可失败构造器
+       if quantity < 1{ return nil }  // 如果quantity<1 即停止构造，代码结束
+        self.quantity = quantity
+    }
+}
+
+if let ci0 = CartItem(name: "Egg", quantity: 10){
+  print("Item:\(ci0.name) Quantity:\(ci0.quantity)")
+}
+
+if let ci1 = CartItem(name: "Pen", quantity: 0){   // quantity为0 导致的构造失败
+    print("Item:\(ci1.name) Quantity:\(ci1.quantity)")
+}
+else{
+    print("Initialize failed!")
+}
+
+if let ci2 = CartItem(name: "", quantity: 10){  // name为nil 导致的构造失败
+    print("Item:\(ci2.name) Quantity:\(ci2.quantity)")
+}
+else{
+    print("Initialize failed!")
+}
+
+// 重写可失败构造器
+class Document{
+    var name:String?
+    init(){}   //  创建一个name为nil的Document实例
+    init?(name:String){   // 创建一个name不为空的Document实例
+        
+        if name.isEmpty { return nil }
+        self.name = name
+    }
+}
+
+class AutomaticallyNamedDocument:Document{
+    
+    override init(){
+      super.init()
+      name = "[Untitled]"
+    }
+    
+    override init(name: String) {   // 用非可失败构造器重写父类的可失败构造器，通过非空处理，确保构造成功
+       super.init()     // 一旦这样写，将不能代理父类的可失败构造器
+        if name.isEmpty{
+           self.name = "[Untitled]"
+        }
+        else{
+           self.name = name
+        }
+    }
+}
+
+class UntitledDocument: Document {
+    
+    override init() {
+        super.init(name: "[Untitled]")!   // 调用父类的可失败构造器强制解包，以实现子类的非可失败构造器。
+    }
+}
+
+// 可失败构造器 init!
+/*
+  通常来说我们通过在init关键字后添加问号的方式（init?）来定义一个可失败构造器，但你也可以使用通过在init后面添加惊叹号的方式来定义一个可失败构造器(init!)，该可失败构造器将会构建一个特定类型的隐式解析可选类型的对象。
+
+  你可以在 init?构造器中代理调用 init!构造器，反之亦然。 你也可以用 init?重写 init!，反之亦然。 你还可以用 init代理调用init!，但这会触发一个断言： init! 构造器是否会触发构造失败？
+
+*/
+
+/// 必要构造器
+// 在构造器前加 require表示所有子类都要实现这个构造器
+class SuperClass{
+    required init(){
+      // 在这里添加构造器实现的必要代码
+    }
+}
+
+class AClass: SuperClass {
+    required init() {  // 重写父类的必要构造器，不需要在前面添加override 但是需要require
+        // 在这里添加必要代码
+    }
+}
+
+/// 通过闭包和函数来设置属性的默认值
+
+// 示例如下：
+ class SomeClass {
+    let someProperty: String = {       // 属性及类型
+    // 在这个闭包中给 someProperty 创建一个默认值
+    // someValue 必须和 SomeType 类型相同
+    return ""      // 返回相同类型
+    }()   // 这个小括号表示立即执行，如果没有小括号表示给属性赋值了这个闭包
+ }
+
+// 跳棋棋盘示例
+struct Checkerboard{
+
+    let boardColors:[Bool] = {
+     
+       var tempBoard = [Bool]()
+       var isBlack = false
+       
+        for i in 1...10{
+            for j in 1...10{
+              tempBoard.append(isBlack)
+              isBlack = !isBlack
+            }
+            isBlack = !isBlack
+        }
+      return tempBoard
+    }()    // 通过此闭包直接初始化属性
+    
+    func squaresBlackAtRow(row r:Int, column:Int)->Bool{
+      return boardColors[(r * 10) + column]
+    }
+}
+
+let board = Checkerboard()
+print("\(board.squaresBlackAtRow( row:0, column:1))")  // 1行2列位置
+print("\(board.squaresBlackAtRow( row:9, column:9))")  // 10行10列位置
 
 
