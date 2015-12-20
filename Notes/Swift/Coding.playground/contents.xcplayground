@@ -17,5 +17,6 @@
         <page name='Inheritance'/>
         <page name='Initialization'/>
         <page name='Deinitialization'/>
+        <page name='Automatic Reference Counting'/>
     </pages>
 </playground>
