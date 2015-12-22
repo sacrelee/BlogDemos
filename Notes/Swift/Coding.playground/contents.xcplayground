@@ -18,5 +18,6 @@
         <page name='Initialization'/>
         <page name='Deinitialization'/>
         <page name='Automatic Reference Counting'/>
+        <page name='Optional Chaining'/>
     </pages>
 </playground>
