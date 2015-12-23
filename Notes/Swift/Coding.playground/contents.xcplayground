@@ -20,5 +20,6 @@
         <page name='Automatic Reference Counting'/>
         <page name='Optional Chaining'/>
         <page name='Error Handling'/>
+        <page name='Type Casting'/>
     </pages>
 </playground>

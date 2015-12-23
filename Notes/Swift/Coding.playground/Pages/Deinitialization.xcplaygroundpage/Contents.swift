@@ -26,7 +26,7 @@ class SettingManager{
     
     let settingFilePath = NSHomeDirectory().stringByAppendingString("/Library/Settings.json")
     
-    var settingsDict = NSMutableDictionary()
+    var settingsDict = [String: AnyObject]()
     
     private init(){   // 初始化设置操作器，如果有配置文件就载入
 
@@ -34,9 +34,9 @@ class SettingManager{
 
         do{
             // 获取到之前存储的配置
-            settingsDict = try NSJSONSerialization.JSONObjectWithData(settingData, options: NSJSONReadingOptions.MutableContainers)  as! NSMutableDictionary
+            settingsDict = try NSJSONSerialization.JSONObjectWithData(settingData, options: NSJSONReadingOptions.MutableContainers)  as! Dictionary
             
-            if settingsDict.allKeys.count != 0 {
+            if settingsDict.count != 0 {
                 try NSFileManager.defaultManager().removeItemAtPath(settingFilePath)
             }
         }
@@ -47,11 +47,11 @@ class SettingManager{
     }
     
     func setValue(key k:String, value b:AnyObject){    // 设定或者添加一条配置信息
-        settingsDict.setValue(b, forKey: k)
+        settingsDict[k] = b
     }
     
-    func value(key k:String)->AnyObject{    // 获取某条配置信息
-       return settingsDict.valueForKey(k)!
+    func value(key k:String)->AnyObject?{    // 获取某条配置信息
+       return settingsDict[k] 
     }
     
     deinit{   // 析构器，释放内存前将所有设置保存到磁盘
