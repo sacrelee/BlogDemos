@@ -75,13 +75,13 @@ protocol RandomNumberGenerator{   // 要求遵循者必须有random方法，而�
 // 此类遵循RandomNumberGenerator协议
 class LinearCongruentialGenerator: RandomNumberGenerator {
     var lastRandom = 42.0
-    let a = 111234.3
-    let b = 7834.12
-    let c = 74.3
+    let m = 139968.0
+    let a = 3877.0
+    let c = 29573.0
     
     func random() -> Double {   // 实现random方法
-        lastRandom = ((lastRandom * a + b) % c)
-        return lastRandom
+        lastRandom = ((lastRandom * a + c) % m)
+        return lastRandom / m
     }
 }
 
@@ -153,18 +153,163 @@ class SubClass: SuperClass, Protocol {
     ②作为常量、变量或属性的类型
     ③作为数组、字典或其他容器中的元素类型
 */
-class Dice{
-    let sides: Int
-    let generator: RandomNumberGenerator
-    init( )
+class Dice{   // 定义一个骰子
+    let sides: Int   // 骰子有几面
+    let generator: RandomNumberGenerator  //  生成投掷的随机数
+    init( sides: Int, generator: RandomNumberGenerator){
+       self.sides = sides
+       self.generator = generator
+    }
     
-    
+    func roll() -> Int{
+       return Int( generator.random() * Double(sides)) + 1
+    }
 }
 
+// 实例化一个6面骰子
+var d6 = Dice(sides: 6, generator: LinearCongruentialGenerator())
+for _ in 1...5{
+   print("Random Dice roll is \(d6.roll())")
+}
+
+/// 委托(代理)模式
+// 属于一种设计模式，允许类、结构体，将一些功能交付给委托实例实现，与OC无异
+
+/*
+   示例
+*/
+enum ComputingType{  // 两种计算类型，和、积
+    case sum, product
+}
+
+protocol computingDelegate{ // 计算的协议
+    func willBeginComputing( numbers:[Double], computingType:ComputingType )  // 即将计算，传入待计算的数组和计算类型
+    func DidEndComputing() -> Double  // 计算结束，返回计算结果
+}
+
+class Computer {   // 此类不负责实际计算，所有计算由代理完成
+    var numbers:[Double]
+    var delegate:computingDelegate?
+    
+    init( numbers:[Double]){
+       self.numbers = numbers
+    }
+    
+    func sum(){
+        if computing( .sum) != nil{
+          print("The sum is \(computing( .sum))")
+        }
+    }
+    
+    func product(){
+        if computing( .product) != nil{
+         print("The product is \(computing( .product))")
+        }
+    }
+    
+    func computing( computingType:ComputingType) -> Double?{
+        
+        if delegate != nil {    // 代理不为空时，可以计算
+           delegate!.willBeginComputing(numbers, computingType: computingType)
+           return delegate!.DidEndComputing()
+        }
+        else{   // 代理为空时，打印错误信息
+            print("I need a Delegate")
+            return nil
+        }
+    }
+}
+
+class Operator: computingDelegate{   // 此类是代理方，为实际计算者。
+    
+    var result:Double?
+    
+    func willBeginComputing( numbers:[Double], computingType:ComputingType ) { // 实现计算方法
+        
+         result = computingType == .sum ? 0.0: 1.0
+        for number in numbers{
+            if computingType == .sum{
+              result! += number
+            }
+            else{
+              result! *= number
+            }
+        }
+    }
+
+    func DidEndComputing() -> Double {   // 实现结果返回方法
+        return result!
+    }
+}
+
+var cpr = Computer(numbers: [1, 2, 3, 4, 5, 6])  // 创建一个计算实例
+cpr.sum()  // 当前没有代理，会报错
+cpr.delegate = Operator()  // 添加代理
+cpr.product()  // 有代理，完成计算
 
 
+/// 在扩展中添加协议成员
+// 通过扩展为已存在的类型遵循协议时，该类型的所有实例也会随之添加协议中的方法
+protocol TextRepresentable{
+  func asText() -> String
+}
+
+extension Dice: TextRepresentable{    // Dice的所有实例都遵循了TextRepresentable
+    func asText() -> String{
+      return "A \(sides)-sided dice"
+    }
+}
+
+let d14 = Dice(sides: 14, generator: LinearCongruentialGenerator())
+print("\(d14.asText())")
+
+// 其它类也可以通过扩展方式遵循TextRepresentable协议
 
 
+/// 通过扩展补充协议声明
+// 某类已实现了某协议的所有要求，可以通过空扩展该协议来使该类符合协议类型
+
+struct Hamster{   // 此类实现了TextRepresentable协议的所有要求
+    var name:String
+    func asText() -> String{
+      return "A Hamster named \(name)"
+    }
+}
+
+extension Hamster:TextRepresentable{}  // 空扩展，Hamster可以作为TextRepresentable类型使用
+
+let simonTheHamster = Hamster(name: "Simon")
+// 即使满足了协议的所有要求，类型也不会自动转变，因此你必须为它做出显式的协议声明
+let somethingTextRepresentable: TextRepresentable = simonTheHamster
+print("\(somethingTextRepresentable.asText())")
+
+/// 集合中的协议类型
+// 协议可以在集合中使用，集合中的所有元素均符合此协议
+
+// things数组中所有元素均符合TextRepresentable协议
+let things:[TextRepresentable] = [d14, simonTheHamster]
+for thing in things{
+  print("\(thing.asText())")
+}
+
+/// 协议的继承
+// 协议可继承其它一个或者多个协议，用","隔开，与类继承类似
+/*
+protocol InheritingProtocl: SomeProtocol, AnotherProtocol{
+    // 协议定义
+}
+*/
+protocol PrettyTextRepresentable: TextRepresentable{   // 此协议继承了TextRepresentable协议
+   func asPrettyText() -> String
+}
+
+// 遵循此协议的类型，必须实现包括它父协议的所有要求
+extension Hamster: PrettyTextRepresentable{
+    func asPrettyText() -> String{
+        var output = asText()
+        return output.removeRange( Range( ))
+    }
+}
 
 
 
