@@ -1,5 +1,7 @@
 /// 协议 Protocols
 
+import Foundation
+
 /// 协议的语法
 // 定义方式
 /*
@@ -188,8 +190,8 @@ protocol computingDelegate{ // 计算的协议
 }
 
 class Computer {   // 此类不负责实际计算，所有计算由代理完成
-    var numbers:[Double]
-    var delegate:computingDelegate?
+    var numbers: [Double]
+    var delegate: computingDelegate?
     
     init( numbers:[Double]){
        self.numbers = numbers
@@ -306,10 +308,230 @@ protocol PrettyTextRepresentable: TextRepresentable{   // 此协议继承了Text
 // 遵循此协议的类型，必须实现包括它父协议的所有要求
 extension Hamster: PrettyTextRepresentable{
     func asPrettyText() -> String{
-        var output = asText()
-        return output.removeRange( Range( ))
+        let output = asText()[asText().startIndex.advancedBy(9) ..< asText().endIndex]
+        return output + "√"
     }
 }
+
+let h = Hamster(name: "Tom")
+print("\(h.asText())")
+print("\(h.asPrettyText())")
+
+/// 类专属协议
+/*
+  在协议的继承列表中添加class可以限制此协议仅适配到类，如果适配到其它类型会出现编译错误
+  protocol SomeClassOnlyProtocol: class, SomeInheritedProtocol{   // class在所有父协议之前
+
+  }
+
+  当协议想要定义的行为，要求（或假设）它的遵循类型必须是引用语义而非值语义时，应该采用类专属协议。
+*/
+
+/// 协议合成
+// 有时需要同时遵循多个协议，格式类似protocol <SomeProtocol, AnotherProtocol>,称之为协议合成
+// 栗子一个
+protocol Named{
+    var name:String { get }
+}
+
+protocol Aged{
+    var age:Int { get }
+}
+
+struct Kid: Named, Aged{
+    var name:String
+    var age:Int
+}
+
+func wishHappyBirthday(celebrator: protocol< Named, Aged>){  // 参数是同时遵循两个协议的实例
+   print("happy birthday:\(celebrator.name) - you are:\(celebrator.age).")
+}
+
+let birthKid = Kid(name: "Li Lei", age: 14)
+wishHappyBirthday(birthKid)
+
+// *PS: 协议合成并不会生成一个新协议类型，而是将多个协议合成为一个临时的协议，超出范围后立即失效。
+
+/// 检验协议的一致性
+// is和as操作符来检查是否遵循某一协议或强制转化为某一类型。
+/*
+  is 操作符用来检查实例是否遵循了某个协议
+  as? 返回一个可选值，当实例遵循协议时，返回该协议类型;否则返回nil
+  as 用以强制向下转型，如果强转失败，会引起运行时错误。
+*/
+
+// 1.定义协议
+protocol HasArea{
+    var area:Double { get }
+}
+
+// 2.定义实现了HasArea协议的Circle和Country类
+class Circle: HasArea {   // 遵循协议，将area作为基于存储型属性radius的计算型属性
+    let pi = 3.1415927
+    var radius: Double
+    var area: Double { return pi * radius * radius }
+    init( radius:Double){
+      self.radius = radius
+    }
+}
+
+class Country: HasArea {  // 遵循协议，将area作为存储型属性实现
+    var area: Double
+    init( area:Double){
+      self.area = area
+    }
+}
+
+// 3.定义没有实现HasArea协议的Animal类
+class Animal{
+    var legs: Int
+    init( legs: Int){ self.legs = legs }
+}
+
+// 4.以上三者的实例可以作为AnyObject存储到一个数组
+let objects:[AnyObject] = [Circle(radius: 1.2), Country(area: 2099), Animal(legs: 4)]
+
+for object in objects{
+    if let objectWithHasArea = object as? HasArea{
+      print("Area is \(objectWithHasArea.area)")
+    }
+    else{
+      print("Something that doesn't have an area.")
+    }
+}
+
+/// 对可选协议的规定
+// 协议含有可选成员，遵循者可以自行选择是否实现这些成员，使用optional前缀来标记这类成员
+// 此类成员在调用时使用 可选链
+/*
+  ①可选协议只能在含有@objc前缀的协议中生效。且@objc的协议只能被类遵循这个前缀表示协议将暴露给Objective-C代码，即使你不打算和Objective-C有什么交互，如果你想要指明协议包含可选属性，那么还是要加上@obj特性。
+  ②标记 @objc 特性的协议只能被继承自 Objective-C 类的类或者 @objc 类采纳，其他类以及结构体和枚举均不能采纳这种协议。
+*/
+
+// ①可选的协议
+@objc protocol CounterDataSource{
+    optional func incrementForCounter( counter:Int) -> Int
+    optional var fixedIncrement: Int { get }
+}
+
+// ②Counter类
+class Counter{
+   var count = 0
+    var dataSource:CounterDataSource?
+    func increment(){
+        if let amount = dataSource?.incrementForCounter?(count){
+            count += amount
+        }
+        else if let amount = dataSource?.fixedIncrement{  // fixedIncrement本身就是一个可选值
+            count += amount
+        }
+    }
+}
+
+// ③数据源类
+class ThreeSource: NSObject, CounterDataSource{
+   let fixedIncrement = 3
+}
+
+// ④将ThreeSource实例添加到Counter实例
+let counter = Counter()
+counter.dataSource = ThreeSource()
+for _ in 1...4{
+   counter.increment()   // 可以取到fixedIncrement = 3,每次循环增加3
+   print(counter.count)
+}
+
+// ⑤更复杂的TowersZeroSource数据源
+@objc class TowerZeroSource: NSObject, CounterDataSource{
+    func incrementForCounter(counter: Int) -> Int {
+        if counter == 0{
+          return 0
+        }
+        else if counter < 0{
+          return 1
+        }
+        else{
+          return -1
+        }
+    }
+}
+
+// ⑥使用TowerZeroSource数据源
+counter.count = -4
+counter.dataSource = TowerZeroSource()
+for _ in 1...5{
+   counter.increment()  // 当count增加到0，就不会继续增加了
+   print(counter.count)
+}
+
+/// 协议扩展
+/*
+  协议可以通过扩展来为采纳协议的类型提供属性、方法以及下标脚本的实现。通过这种方式，你可以基于协议本身来实现这些功能，而无需在每个采纳协议的类型中都重复同样的实现，也无需使用全局函数。
+*/
+extension RandomNumberGenerator{
+    func randomBool() -> Bool{
+      return random() > 0.5
+    }
+}
+
+// 通过协议扩展，所有采纳协议的类型，都能自动获得这个扩展增加的方法实现
+let gtr = LinearCongruentialGenerator()
+print("here is a random number:\(gtr.random())")
+print("And here is a random Boolean:\(gtr.randomBool())")  // 实例gtr自动获取了randomBool方法的实现
+
+// *提供默认方法实现
+/*
+ 可以通过协议扩展来为协议要求的属性、方法以及下标脚本提供默认的实现。如果采纳协议的类型为这些要求提供了自己的实现，那么这些自定义实现将会替代扩展中的默认实现被使用。
+
+PS:通过协议扩展为协议要求提供的默认实现和可选的协议要求不同。虽然在这两种情况下，采纳协议的类型都无需自己实现这些要求，但是通过扩展提供的默认实现可以直接调用，而无需使用可选链式调用。
+*/
+extension PrettyTextRepresentable{   // 扩展此协议，简单的添加了一个默认属性
+    var prettyTextureDescription:String{
+       return self.prettyTextureDescription
+    }
+}
+
+// *为协议扩展添加限制条件
+/*
+  在扩展协议的时候，可以指定一些限制条件，只有采纳协议的类型满足这些限制条件时，才能获得协议扩展提供的默认实现。
+  这些限制条件写在协议名之后，使用 where 子句来描述，正如Where子句)中所描述的。
+*/
+
+// 扩展CollectionType协议，仅应用于集合中元素遵循了TextRepresentable协议的情况
+
+//extension CollectionType where Generator.Element: TextRepresentable {
+//    func asList() -> String {
+//        var rtnString:String = "("
+//        rtnString.appendContentsOf(map({$0.asText()}).description+")")
+//        return rtnString
+//}
+
+
+
+/**
+*	@author SACRELEE, 2015-12-25 18:12:34
+*
+*	目前不清楚问题出在哪，
+*/
+extension CollectionType where Generator.Element: TextRepresentable {
+    var textualDescription: String {
+        let itemsAsText = self.map ({ $0.textualDescription })
+        return "[" + itemsAsText.joinWithSeparator(", ") + "]"
+    }
+}
+    
+    
+let murrayTheHamster = Hamster(name: "Murray")
+let morganTheHamster = Hamster(name: "Morgan")
+let mauriceTheHamster = Hamster(name: "Maurice")
+let hamsters = [murrayTheHamster, morganTheHamster, mauriceTheHamster]
+
+print(hamster.texturalDescription)
+
+
+
+
+
 
 
 
