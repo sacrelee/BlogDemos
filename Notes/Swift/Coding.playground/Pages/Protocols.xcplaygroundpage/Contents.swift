@@ -253,17 +253,17 @@ cpr.product()  // 有代理，完成计算
 /// 在扩展中添加协议成员
 // 通过扩展为已存在的类型遵循协议时，该类型的所有实例也会随之添加协议中的方法
 protocol TextRepresentable{
-  func asText() -> String
+    var textualDescription:String{ get }
 }
 
 extension Dice: TextRepresentable{    // Dice的所有实例都遵循了TextRepresentable
-    func asText() -> String{
+    var textualDescription:String{
       return "A \(sides)-sided dice"
     }
 }
 
 let d14 = Dice(sides: 14, generator: LinearCongruentialGenerator())
-print("\(d14.asText())")
+print("\(d14.textualDescription)")
 
 // 其它类也可以通过扩展方式遵循TextRepresentable协议
 
@@ -273,7 +273,7 @@ print("\(d14.asText())")
 
 struct Hamster{   // 此类实现了TextRepresentable协议的所有要求
     var name:String
-    func asText() -> String{
+    var textualDescription:String{
       return "A Hamster named \(name)"
     }
 }
@@ -283,7 +283,7 @@ extension Hamster:TextRepresentable{}  // 空扩展，Hamster可以作为TextRep
 let simonTheHamster = Hamster(name: "Simon")
 // 即使满足了协议的所有要求，类型也不会自动转变，因此你必须为它做出显式的协议声明
 let somethingTextRepresentable: TextRepresentable = simonTheHamster
-print("\(somethingTextRepresentable.asText())")
+print("\(somethingTextRepresentable.textualDescription)")
 
 /// 集合中的协议类型
 // 协议可以在集合中使用，集合中的所有元素均符合此协议
@@ -291,7 +291,7 @@ print("\(somethingTextRepresentable.asText())")
 // things数组中所有元素均符合TextRepresentable协议
 let things:[TextRepresentable] = [d14, simonTheHamster]
 for thing in things{
-  print("\(thing.asText())")
+  print("\(thing.textualDescription)")
 }
 
 /// 协议的继承
@@ -302,20 +302,20 @@ protocol InheritingProtocl: SomeProtocol, AnotherProtocol{
 }
 */
 protocol PrettyTextRepresentable: TextRepresentable{   // 此协议继承了TextRepresentable协议
-   func asPrettyText() -> String
+    var prettyTextualDescription:String{ get }
 }
 
 // 遵循此协议的类型，必须实现包括它父协议的所有要求
 extension Hamster: PrettyTextRepresentable{
-    func asPrettyText() -> String{
-        let output = asText()[asText().startIndex.advancedBy(9) ..< asText().endIndex]
+    var prettyTextualDescription:String{
+        let output = textualDescription[textualDescription.startIndex.advancedBy(9) ..< textualDescription.endIndex]
         return output + "√"
     }
 }
 
 let h = Hamster(name: "Tom")
-print("\(h.asText())")
-print("\(h.asPrettyText())")
+print("\(h.textualDescription)")
+print("\(h.prettyTextualDescription)")
 
 /// 类专属协议
 /*
@@ -502,10 +502,10 @@ extension PrettyTextRepresentable{   // 扩展此协议，简单的添加了一�
 //extension CollectionType where Generator.Element: TextRepresentable {
 //    func asList() -> String {
 //        var rtnString:String = "("
-//        rtnString.appendContentsOf(map({$0.asText()}).description+")")
+//        rtnString.appendContentsOf(map({$0.textualDescription}).description+")")
 //        return rtnString
+// }
 //}
-
 
 
 /**
@@ -514,19 +514,19 @@ extension PrettyTextRepresentable{   // 扩展此协议，简单的添加了一�
 *	目前不清楚问题出在哪，
 */
 extension CollectionType where Generator.Element: TextRepresentable {
-    var textualDescription: String {
-        let itemsAsText = self.map ({ $0.textualDescription })
+    func textList() -> String {
+        let itemsAsText = self.map{ $0.textualDescription }
         return "[" + itemsAsText.joinWithSeparator(", ") + "]"
     }
 }
-    
+
     
 let murrayTheHamster = Hamster(name: "Murray")
 let morganTheHamster = Hamster(name: "Morgan")
 let mauriceTheHamster = Hamster(name: "Maurice")
 let hamsters = [murrayTheHamster, morganTheHamster, mauriceTheHamster]
 
-print(hamster.texturalDescription)
+print(hamsters.textList())
 
 
 
