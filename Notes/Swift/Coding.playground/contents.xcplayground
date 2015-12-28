@@ -2,6 +2,7 @@
 <playground version='6.0' target-platform='ios'>
     <pages>
         <page name='ReadMe'/>
+        <page name='Chapter 2------------------'/>
         <page name='Basis'/>
         <page name='Basis Operators'/>
         <page name='String and Characters'/>
@@ -27,5 +28,6 @@
         <page name='Generics'/>
         <page name='Access Control'/>
         <page name='Advanced Operators'/>
+        <page name='Chapter 3 -----------------'/>
     </pages>
 </playground>
