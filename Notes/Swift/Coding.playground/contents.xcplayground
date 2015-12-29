@@ -29,5 +29,6 @@
         <page name='Access Control'/>
         <page name='Advanced Operators'/>
         <page name='Chapter 3 -----------------'/>
+        <page name='Lexical Structure'/>
     </pages>
 </playground>
