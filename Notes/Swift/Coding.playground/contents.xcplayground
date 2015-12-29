@@ -30,5 +30,6 @@
         <page name='Advanced Operators'/>
         <page name='Chapter 3 -----------------'/>
         <page name='Lexical Structure'/>
+        <page name='Types'/>
     </pages>
 </playground>
