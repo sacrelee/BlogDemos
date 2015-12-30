@@ -31,5 +31,6 @@
         <page name='Chapter 3 -----------------'/>
         <page name='Lexical Structure'/>
         <page name='Types'/>
+        <page name='Expressions'/>
     </pages>
 </playground>
