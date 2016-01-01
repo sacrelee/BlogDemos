@@ -37,8 +37,59 @@
     条件的结果必须符合 BooleanType 协议。
 */
 
+/* **For-In 语句
 
+for-in语句允许在重复执行代码块的同时，迭代集合（或遵循Sequence协议的任意类型）中的每一项。
 
+for-in语句的形式如下：
+
+    for item in collection {
+        statements
+    }
+
+for-in语句在循环开始前会调用 collection 表达式的generate方法来获取
+
+*/
+
+/*  **While 语句
+
+while语句当循环条件为真时，允许重复执行代码块。
+
+while语句的形式如下：
+
+    while condition {
+      statements
+    }
+
+while语句的执行流程如下：
+
+计算 condition 表达式： 如果为真true，转到第2步。如果为false，while至此执行完毕。
+执行 statements ，然后转到第1步。
+由于 condition 的值在 statements 执行前就已计算出，因此while语句中的 statements 可能会被执行若干次，也可能不会被执行。
+
+condition 表达式的值的类型必须遵循BooleanType协议。同时，condition 表达式也可以使用可选绑定.
+*/
+
+/*  **Repeat-While 语句
+
+repeat-while语句允许代码块被执行一次或多次。
+
+repeat-while语句的形式如下：
+
+    repeat {
+       statements
+    } while condition
+
+repeat-while语句的执行流程如下：
+
+执行 statements，然后转到第2步。
+计算 condition 表达式： 如果为true，转到第1步。如果为false，repeat-while至此执行完毕。
+由于 condition 表达式的值是在 statements 执行后才计算出，因此repeat-while语句中的 statements 至少会被执行一次。
+
+condition 表达式的值的类型必须遵循BooleanType协议。同时，condition 表达式也可以使用可选绑定.
+*/
+
+/// 分支语句
 
 
 
