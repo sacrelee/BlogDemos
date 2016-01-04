@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<playground version='6.0' target-platform='ios'>
+<playground version='6.0' target-platform='ios' display-mode='raw'>
     <pages>
         <page name='ReadMe'/>
         <page name='Chapter 2------------------'/>
@@ -33,6 +33,6 @@
         <page name='Types'/>
         <page name='Expressions'/>
         <page name='Statements'/>
-        <page name='Blog'/>
+        <page name='Declarations'/>
     </pages>
 </playground>
