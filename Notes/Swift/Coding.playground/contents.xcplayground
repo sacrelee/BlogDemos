@@ -34,5 +34,6 @@
         <page name='Expressions'/>
         <page name='Statements'/>
         <page name='Declarations'/>
+        <page name='Attributes'/>
     </pages>
 </playground>
