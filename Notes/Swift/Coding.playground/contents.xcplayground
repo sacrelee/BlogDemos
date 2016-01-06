@@ -35,5 +35,6 @@
         <page name='Statements'/>
         <page name='Declarations'/>
         <page name='Attributes'/>
+        <page name='Patterns'/>
     </pages>
 </playground>
