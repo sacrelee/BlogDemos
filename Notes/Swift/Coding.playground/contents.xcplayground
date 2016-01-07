@@ -37,5 +37,7 @@
         <page name='Attributes'/>
         <page name='Patterns'/>
         <page name='Generic Parameters and Arguments'/>
+        <page name='Blogs-----------------------'/>
+        <page name='Access Control 权限控制的黑与白'/>
     </pages>
 </playground>
