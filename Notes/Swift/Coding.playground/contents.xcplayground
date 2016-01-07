@@ -36,5 +36,6 @@
         <page name='Declarations'/>
         <page name='Attributes'/>
         <page name='Patterns'/>
+        <page name='Generic Parameters and Arguments'/>
     </pages>
 </playground>
