@@ -12,15 +12,13 @@ class LineModel: NSObject {
 
     static var lineWidth:CGFloat = 5.0
     static var lineColor = UIColor.blackColor()
-    static var linePoints = [CGPointMake( 0, 0)]
     
     var points: [CGPoint]
     var width: CGFloat
     var color: UIColor
     
     override init(){
-         points = LineModel.linePoints
-         points.removeAll()
+         points = []
          width = LineModel.lineWidth
          color = LineModel.lineColor
     }
