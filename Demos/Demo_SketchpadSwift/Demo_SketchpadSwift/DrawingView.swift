@@ -24,7 +24,7 @@ class DrawingView: UIView {
       
 
         if pan.state == .Began{
-           lineModels.append(LineModel())
+           lineModels.append(LineModel.init())
         }
         
         let lastLM = lineModels.last!
@@ -49,7 +49,7 @@ class DrawingView: UIView {
         
         for line in lineModels {
         
-            UIColor.blackColor().set()
+            line.color.set()
             CGContextSetLineWidth( contextRef, line.width)
             
             let firstPoint = line.points[0]

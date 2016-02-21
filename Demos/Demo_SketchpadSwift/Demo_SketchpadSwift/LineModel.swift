@@ -18,8 +18,10 @@ class LineModel: NSObject {
     var color: UIColor
     
     override init(){
-         points = []
-         width = LineModel.lineWidth
-         color = LineModel.lineColor
+        points = []
+        width = LineModel.lineWidth
+        color = LineModel.lineColor
     }
+
 }
+
