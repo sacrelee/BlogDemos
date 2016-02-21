@@ -9,9 +9,11 @@
 import UIKit
 import SnapKit
 
+
 class DrawingView: UIView {
     
     var lineModels = [LineModel]()
+    var willDraw:() -> Void = {_ in }
     
     init() {
         super.init(frame: CGRectZero)
@@ -24,7 +26,8 @@ class DrawingView: UIView {
       
 
         if pan.state == .Began{
-           lineModels.append(LineModel())
+           self.willDraw()
+           lineModels.append(LineModel.init())
         }
         
         let lastLM = lineModels.last!
@@ -49,7 +52,7 @@ class DrawingView: UIView {
         
         for line in lineModels {
         
-            UIColor.blackColor().set()
+            line.color.set()
             CGContextSetLineWidth( contextRef, line.width)
             
             let firstPoint = line.points[0]

@@ -28,6 +28,7 @@ class RootViewController: UIViewController {
         
         //  画板底层
         let paintingView = DrawingView()
+        paintingView.willDraw = { self.displaySettings(false)}
         self.view.addSubview(paintingView)
         paintingView.snp_makeConstraints { (make) -> Void in
              make.edges.equalTo(self.view).inset( UIEdgeInsetsMake( 20, 0, 0, 0))
@@ -106,9 +107,9 @@ class RootViewController: UIViewController {
             settingView.addSubview(slider)
             slider.tag = 40 + i
             slider.enabled = i == 0 ? false: true
-            slider.value = i == 0 ? 5.0: 1.0
-            slider.minimumValue = i == 0 ? Float(eraserWidth!): Float(lineWidth!)
-            slider.maximumValue = i == 0 ? 10.0: 6.0
+            slider.value = i == 0 ? Float(eraserWidth!): Float(lineWidth!)
+            slider.minimumValue = i == 0 ? 10.0: 1.0
+            slider.maximumValue = i == 0 ? 20.0: 6.0
             slider.addTarget( self, action: "sliderValueChanged:", forControlEvents: .ValueChanged)
             slider.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo( i == 0 ? eraserSwitch: self.view.viewWithTag(21)!).offset( i == 0 ? 0: -25)
@@ -206,7 +207,7 @@ class RootViewController: UIViewController {
     func displaySettings( display:Bool){
         
         self.view.setNeedsUpdateConstraints()
-        UIView.animateWithDuration( 1.0) { () -> Void in
+        UIView.animateWithDuration( 0.5) { () -> Void in
            
             self.settingView.snp_updateConstraints { (make) -> Void in
                 make.height.equalTo( svHeight)
