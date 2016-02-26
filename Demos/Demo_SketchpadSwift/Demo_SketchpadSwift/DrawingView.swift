@@ -23,12 +23,21 @@ class DrawingView: UIView {
         self.addGestureRecognizer(panGr)
     }
     
-    func saveData(){
+    func canSaveData() -> Bool{
+        if self.lineModels.count == 0 {
+           return false
+        }
+
+           return true
+    }
+    
+    func saveData() -> Bool{
         if fm.saveLineModels(lineModels: self.lineModels) {
            print("data saved!")
-           return
+           return true
         }
         print("data save error!")
+        return false
     }
     
     func readData(){

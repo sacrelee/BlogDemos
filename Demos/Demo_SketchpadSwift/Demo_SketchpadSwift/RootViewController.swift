@@ -35,14 +35,14 @@ class RootViewController: UIViewController {
         
         self.view.clipsToBounds = false
         
-        //  画板底层
+        //  DrawingView
         paintingView.willDraw = { self.displaySettings(false) }
         self.view.addSubview(paintingView)
         paintingView.snp_makeConstraints { (make) -> Void in
              make.edges.equalTo(self.view).inset( UIEdgeInsetsMake( 20, 0, 0, 0))
         }
 
-        // 按钮
+        // function buttons
         for i in 0...2{
             let settingBtn = UIButton()
             self.view.addSubview(settingBtn)
@@ -58,7 +58,7 @@ class RootViewController: UIViewController {
             }
         }
         
-        // 设定面板
+        // function View
         self.view.addSubview(settingView)
         settingView.backgroundColor = UIColor.whiteColor()
         settingView.snp_makeConstraints { (make) -> Void in
@@ -123,6 +123,7 @@ class RootViewController: UIViewController {
         lineSlider.layoutIfNeeded()
         let gap = ( lineSlider.frame.size.width - 35 * 5 ) / 4.0
        
+        // color buttons
         for i in 1...5{
            let colorButton = UIButton()
            settingView.addSubview(colorButton)
@@ -144,7 +145,7 @@ class RootViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    // 橡皮擦
+    //
     func switchValueChanged( sender: UISwitch){
     
         (self.view.viewWithTag(40) as! UISlider).enabled = sender.on
@@ -163,7 +164,7 @@ class RootViewController: UIViewController {
         print("\(sender.on)")
     }
     
-    // 滑块
+    //
     func sliderValueChanged( sender: UISlider){
         LineModel.lineWidth = CGFloat.init( sender.value)
         if sender.tag % 10 == 0 {
@@ -176,7 +177,7 @@ class RootViewController: UIViewController {
         print("\( sender.value)")
     }
     
-    // 颜色按钮
+    //
     func colorButtonClick( sender: UIButton){
         
         let es = self.view.viewWithTag(30) as! UISwitch
@@ -193,24 +194,41 @@ class RootViewController: UIViewController {
         es.on = false
     }
     
-    // TODO: 底部按钮事件
+    //
     func buttonClick( btn:UIButton){
         print("\(btn.tag)")
         
-        //  点击设置
+        // settings
         if btn.tag == 10 {
             self.displaySettings(true)
         }
-        else if btn.tag == 11{   // 保存
-            paintingView.saveData()
+        else if btn.tag == 11{   // save
+
+            if paintingView.canSaveData() == false {
+               return 
+            }
+            
+            let content:String
+            if paintingView.saveData() == true {
+                content = "保存成功！"
+            }
+            else {
+                content = "保存失败！"
+            }
+            let uac = UIAlertController(title: "提示", message: content, preferredStyle: .Alert)
+            uac.addAction(UIAlertAction(title: "确定", style:.Default, handler: { (ac) -> Void in
+            }))
+            
+            self.presentViewController( uac, animated:true) { () -> Void in
+            }
         }
-        else {   // 清空
+        else {   // clear
             paintingView.clearData()
         }
         
     }
     
-    // TODO: 显示设定面板
+    //
     func displaySettings( display:Bool){
         
         self.view.setNeedsUpdateConstraints()
