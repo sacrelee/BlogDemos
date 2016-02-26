@@ -12,6 +12,7 @@ import SnapKit
 
 class DrawingView: UIView {
     
+    var lineChanged = false
     var lineModels = [LineModel]()
     var willDraw:() -> Void = {_ in }
     let fm = FMDBManager.defaultManager
@@ -24,16 +25,17 @@ class DrawingView: UIView {
     }
     
     func canSaveData() -> Bool{
-        if self.lineModels.count == 0 {
-           return false
+        if self.lineModels.count != 0 && lineChanged == true {
+           return true
         }
 
-           return true
+           return false
     }
     
     func saveData() -> Bool{
         if fm.saveLineModels(lineModels: self.lineModels) {
            print("data saved!")
+           lineChanged = false
            return true
         }
         print("data save error!")
@@ -65,6 +67,7 @@ class DrawingView: UIView {
       
         if pan.state == .Began{
            self.willDraw()
+           lineChanged = true
            lineModels.append(LineModel.init())
         }
         

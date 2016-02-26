@@ -205,7 +205,7 @@ class RootViewController: UIViewController {
         else if btn.tag == 11{   // save
 
             if paintingView.canSaveData() == false {
-               return 
+               return
             }
             
             let content:String
