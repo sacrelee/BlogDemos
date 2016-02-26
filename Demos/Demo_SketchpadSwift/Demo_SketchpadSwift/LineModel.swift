@@ -8,20 +8,21 @@
 
 import UIKit
 
-class LineModel: NSObject {
+
+class LineModel:NSObject{
 
     static var lineWidth:CGFloat = 5.0
-    static var lineColor = UIColor.blackColor()
+    static var lineColorIndex = 1
     
-    var points: [CGPoint]
+    var points: [CGPoint] = [CGPoint]()
     var width: CGFloat
-    var color: UIColor
+    var colorIndex: NSInteger
     
-    override init(){
+     override init(){
         points = []
         width = LineModel.lineWidth
-        color = LineModel.lineColor
+        colorIndex = LineModel.lineColorIndex
     }
-
+        
 }
 

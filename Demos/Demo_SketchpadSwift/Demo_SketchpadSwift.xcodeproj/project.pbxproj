@@ -12,6 +12,8 @@
 		E50A73121C60B5A300D10136 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E50A73101C60B5A300D10136 /* LaunchScreen.storyboard */; };
 		E50A731C1C60B61800D10136 /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50A731B1C60B61800D10136 /* DrawingView.swift */; };
 		E50A731E1C60B6F500D10136 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50A731D1C60B6F500D10136 /* RootViewController.swift */; };
+		E52D43B21C7EFAF600892945 /* FMDBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52D43B11C7EFAF600892945 /* FMDBManager.swift */; };
+		E54039081C7FF23C00F5306C /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54039071C7FF23C00F5306C /* ConfigManager.swift */; };
 		E5A21DBF1C60B90800DE9BE9 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5A21DBE1C60B90800DE9BE9 /* SnapKit.framework */; };
 		E5A610D41C60C8C400BE17CA /* LineModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A610D31C60C8C400BE17CA /* LineModel.swift */; };
 		F68D01CAE2C7BCAF54B98789 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9DD3F1A21BC5BDC028552B0 /* Pods.framework */; };
@@ -27,6 +29,9 @@
 		E50A73131C60B5A300D10136 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E50A731B1C60B61800D10136 /* DrawingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
 		E50A731D1C60B6F500D10136 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		E52D43B11C7EFAF600892945 /* FMDBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FMDBManager.swift; sourceTree = "<group>"; };
+		E52D43B71C7EFF3B00892945 /* Demo_SketchpadSwift-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Demo_SketchpadSwift-Bridging-Header.h"; sourceTree = "<group>"; };
+		E54039071C7FF23C00F5306C /* ConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
 		E5A21DBE1C60B90800DE9BE9 /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = "Pods/../build/Debug-iphoneos/SnapKit.framework"; sourceTree = "<group>"; };
 		E5A610D31C60C8C400BE17CA /* LineModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineModel.swift; sourceTree = "<group>"; };
 		F244F44B59D36DDCCDDECACA /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -77,13 +82,40 @@
 			children = (
 				E50A730C1C60B5A300D10136 /* AppDelegate.swift */,
 				E50A731D1C60B6F500D10136 /* RootViewController.swift */,
-				E50A731B1C60B61800D10136 /* DrawingView.swift */,
-				E5A610D31C60C8C400BE17CA /* LineModel.swift */,
+				E540390D1C80110100F5306C /* View */,
+				E540390B1C8010D600F5306C /* Models */,
+				E540390C1C8010F200F5306C /* Tools */,
 				E50A730E1C60B5A300D10136 /* Assets.xcassets */,
 				E50A73101C60B5A300D10136 /* LaunchScreen.storyboard */,
 				E50A73131C60B5A300D10136 /* Info.plist */,
+				E52D43B71C7EFF3B00892945 /* Demo_SketchpadSwift-Bridging-Header.h */,
 			);
 			path = Demo_SketchpadSwift;
+			sourceTree = "<group>";
+		};
+		E540390B1C8010D600F5306C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E5A610D31C60C8C400BE17CA /* LineModel.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		E540390C1C8010F200F5306C /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				E52D43B11C7EFAF600892945 /* FMDBManager.swift */,
+				E54039071C7FF23C00F5306C /* ConfigManager.swift */,
+			);
+			name = Tools;
+			sourceTree = "<group>";
+		};
+		E540390D1C80110100F5306C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E50A731B1C60B61800D10136 /* DrawingView.swift */,
+			);
+			name = View;
 			sourceTree = "<group>";
 		};
 		F40400241B4544D23C5673FB /* Frameworks */ = {
@@ -217,9 +249,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				E50A731C1C60B61800D10136 /* DrawingView.swift in Sources */,
+				E52D43B21C7EFAF600892945 /* FMDBManager.swift in Sources */,
 				E50A730D1C60B5A300D10136 /* AppDelegate.swift in Sources */,
 				E50A731E1C60B6F500D10136 /* RootViewController.swift in Sources */,
 				E5A610D41C60C8C400BE17CA /* LineModel.swift in Sources */,
+				E54039081C7FF23C00F5306C /* ConfigManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,6 +311,8 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/SACRELEE/Project/Sumtice/iOSDev/Demos/Demo_SketchpadSwift/Demo_SketchpadSwift/Demo_SketchpadSwift-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -315,6 +351,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/SACRELEE/Project/Sumtice/iOSDev/Demos/Demo_SketchpadSwift/Demo_SketchpadSwift/Demo_SketchpadSwift-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -325,12 +363,15 @@
 			baseConfigurationReference = F244F44B59D36DDCCDDECACA /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Demo_SketchpadSwift/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "sumtice.Demo-SketchpadSwift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Demo_SketchpadSwift/Demo_SketchpadSwift-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -339,12 +380,14 @@
 			baseConfigurationReference = C710652E33FB2C4FA6918BF9 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Demo_SketchpadSwift/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "sumtice.Demo-SketchpadSwift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Demo_SketchpadSwift/Demo_SketchpadSwift-Bridging-Header.h";
 			};
 			name = Release;
 		};

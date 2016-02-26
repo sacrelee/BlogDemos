@@ -9,17 +9,26 @@
 import UIKit
 import SnapKit
 
-let colorArray = [UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), UIColor(red: 0.4, green: 0.8, blue: 1.0, alpha: 1.0), UIColor(red: 0.0, green: 1.0, blue: 0.0, alpha: 1.0), UIColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0), UIColor(red: 1.0, green: 1.0, blue: 0.0, alpha: 1.0)]
 
 let svHeight = 200.0
 
 class RootViewController: UIViewController {
     
     let settingView = UIView()
-    var lastLineColor: UIColor?
+    var lastLineColorIndex = 0
     var eraserWidth: CGFloat?
     var lineWidth: CGFloat?
     var showSettingView = false
+    let paintingView = DrawingView()
+    let colorArray = ConfigManager.colorArray
+    
+    override func viewWillAppear(animated: Bool) {
+        paintingView.readData()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        paintingView.saveData()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,35 +36,27 @@ class RootViewController: UIViewController {
         self.view.clipsToBounds = false
         
         //  画板底层
-        let paintingView = DrawingView()
-        paintingView.willDraw = { self.displaySettings(false)}
+        paintingView.willDraw = { self.displaySettings(false) }
         self.view.addSubview(paintingView)
         paintingView.snp_makeConstraints { (make) -> Void in
              make.edges.equalTo(self.view).inset( UIEdgeInsetsMake( 20, 0, 0, 0))
         }
-        
+
         // 按钮
-        for i in 0...1{
+        for i in 0...2{
             let settingBtn = UIButton()
             self.view.addSubview(settingBtn)
+            
             settingBtn.tag = i + 10
-            settingBtn.setTitle( i == 0 ? "保存": "设置", forState: .Normal)
+            settingBtn.setTitle( i == 0 ? "设置": i == 1 ? "保存": "清空", forState: .Normal)
             settingBtn.setTitleColor( UIColor.blackColor(), forState: .Normal)
             settingBtn.addTarget(self, action: "buttonClick:", forControlEvents: .TouchUpInside)
             settingBtn.snp_makeConstraints { (make) -> Void in
                 make.size.equalTo( CGSizeMake( 100, 50))
                 make.bottom.equalTo( -10)
-                make.left.equalTo( i == 0 ? 100 : 0)
+                make.left.equalTo(i == 0 ? 0: i == 1 ? 100: 200)
             }
         }
-        
-//        let tapView = UIView()
-//        tapView.backgroundColor = UIColor.blackColor()
-//        tapView.alpha = 0.5
-//        self.view.addSubview(tapView)
-//        tapView.snp_makeConstraints { (make) -> Void in
-//            make.edges.equalTo(self.view).inset(UIEdgeInsetsMake( 0, 0, 0, 0))
-//        }
         
         // 设定面板
         self.view.addSubview(settingView)
@@ -100,8 +101,8 @@ class RootViewController: UIViewController {
             make.left.equalTo( topLabel.snp_right).offset(5)
         }
         
-        eraserWidth = 5.0
-        lineWidth = 1.0
+        eraserWidth = CGFloat(15.0)
+        lineWidth = CGFloat(3.0)
         for i in 0...1 {
             let slider = UISlider()
             settingView.addSubview(slider)
@@ -122,20 +123,20 @@ class RootViewController: UIViewController {
         lineSlider.layoutIfNeeded()
         let gap = ( lineSlider.frame.size.width - 35 * 5 ) / 4.0
        
-        for i in 0...4{
+        for i in 1...5{
            let colorButton = UIButton()
            settingView.addSubview(colorButton)
            colorButton.tag = 50 + i
            colorButton.backgroundColor = colorArray[i]
            colorButton.layer.borderWidth = 1.0
-            colorButton.layer.borderColor = i == 0 ? UIColor.grayColor().CGColor: UIColor.clearColor().CGColor
+            colorButton.layer.borderColor = i == 1 ? UIColor.grayColor().CGColor: UIColor.clearColor().CGColor
            colorButton.layer.masksToBounds = true
            colorButton.layer.cornerRadius = 7.0
            colorButton.addTarget(self, action: "colorButtonClick:", forControlEvents: .TouchUpInside)
            colorButton.snp_makeConstraints(closure: { (make) -> Void in
               make.size.equalTo(CGSizeMake( 35, 35))
               make.top.equalTo(lineSlider.snp_bottom).offset(20)
-              make.left.equalTo( i == 0 ? lineSlider.snp_left: self.view.viewWithTag(50 + i - 1)!.snp_right).offset( i == 0 ? 0: gap)
+              make.left.equalTo( i == 1 ? lineSlider.snp_left: self.view.viewWithTag(50 + i - 1)!.snp_right).offset( i == 1 ? 0: gap)
            })
         }
         
@@ -150,12 +151,12 @@ class RootViewController: UIViewController {
         (self.view.viewWithTag(41) as! UISlider).enabled = !sender.on
         
         if sender.on == false{
-           LineModel.lineColor = lastLineColor!
+           LineModel.lineColorIndex = lastLineColorIndex
            LineModel.lineWidth = lineWidth!
         }
         else{
-           lastLineColor = LineModel.lineColor
-           LineModel.lineColor = UIColor.whiteColor()
+           lastLineColorIndex = LineModel.lineColorIndex
+           LineModel.lineColorIndex = 0
            LineModel.lineWidth = eraserWidth!
         }
         
@@ -183,12 +184,12 @@ class RootViewController: UIViewController {
           return
         }
         
-        for i in 0...4{
+        for i in 1...5{
             self.view.viewWithTag(i + 50)!.layer.borderColor = i + 50 == sender.tag ? UIColor.grayColor().CGColor: UIColor.clearColor().CGColor
         }
         
         let index = sender.tag % 10
-        LineModel.lineColor = colorArray[index]
+        LineModel.lineColorIndex = index
         es.on = false
     }
     
@@ -197,10 +198,16 @@ class RootViewController: UIViewController {
         print("\(btn.tag)")
         
         //  点击设置
-        if btn.tag == 11 {
+        if btn.tag == 10 {
             self.displaySettings(true)
-            return
         }
+        else if btn.tag == 11{   // 保存
+            paintingView.saveData()
+        }
+        else {   // 清空
+            paintingView.clearData()
+        }
+        
     }
     
     // TODO: 显示设定面板

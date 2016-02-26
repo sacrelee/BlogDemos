@@ -14,6 +14,7 @@ class DrawingView: UIView {
     
     var lineModels = [LineModel]()
     var willDraw:() -> Void = {_ in }
+    let fm = FMDBManager.defaultManager
     
     init() {
         super.init(frame: CGRectZero)
@@ -22,9 +23,37 @@ class DrawingView: UIView {
         self.addGestureRecognizer(panGr)
     }
     
+    func saveData(){
+        if fm.saveLineModels(lineModels: self.lineModels) {
+           print("data saved!")
+           return
+        }
+        print("data save error!")
+    }
+    
+    func readData(){
+        
+        if let tmpModels = fm.getLineModelArray() {
+            if tmpModels.count != 0 {
+             self.lineModels = tmpModels
+             self.setNeedsLayout()
+             print("data read!")
+                return
+            }
+            print("null data!")
+            return
+        }
+        
+        print("read data error!")
+    }
+    
+    func clearData(){
+        lineModels.removeAll()
+        self.setNeedsDisplay()
+    }
+    
     func panInView( pan:UIPanGestureRecognizer){
       
-
         if pan.state == .Began{
            self.willDraw()
            lineModels.append(LineModel.init())
@@ -36,14 +65,12 @@ class DrawingView: UIView {
         if pan.state == .Ended{
           print("\(lastLM.points)")
         }
-        
         self.setNeedsDisplay()
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
     
     
     override func drawRect(rect: CGRect) {
@@ -52,7 +79,7 @@ class DrawingView: UIView {
         
         for line in lineModels {
         
-            line.color.set()
+           ConfigManager.colorArray[line.colorIndex].set()
             CGContextSetLineWidth( contextRef, line.width)
             
             let firstPoint = line.points[0]

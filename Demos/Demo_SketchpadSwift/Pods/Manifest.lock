@@ -1,10 +1,15 @@
 PODS:
+  - FMDB (2.6):
+    - FMDB/standard (= 2.6)
+  - FMDB/standard (2.6)
   - SnapKit (0.15.0)
 
 DEPENDENCIES:
+  - FMDB
   - SnapKit (~> 0.15.0)
 
 SPEC CHECKSUMS:
+  FMDB: c1968bab3ab0aed38f66cb778ae1e7fa9a652b6e
   SnapKit: 4962eed2ee18e48cbd2b2292fffc57efe7235f87
 
 COCOAPODS: 0.39.0
