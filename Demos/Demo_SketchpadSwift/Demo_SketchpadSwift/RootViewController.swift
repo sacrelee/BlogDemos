@@ -141,7 +141,18 @@ class RootViewController: UIViewController {
            })
         }
         
-
+        let cancelButton = UIButton()
+        settingView.addSubview(cancelButton)
+        cancelButton.tag = 60
+        cancelButton.setTitle("取消", forState:.Normal)
+        cancelButton.setTitleColor(UIColor(red:0.14, green:0.6, blue:0.93, alpha:1), forState: .Normal)
+        cancelButton.addTarget(self, action:"buttonClick:", forControlEvents:.TouchUpInside)
+        cancelButton.snp_makeConstraints { (make) -> Void in
+            make.size.equalTo(CGSizeMake( 80, 50))
+            make.top.equalTo(topLabel).offset(-30)
+            make.right.equalTo(settingView)
+        }
+        
         // Do any additional setup after loading the view.
     }
     
@@ -222,10 +233,12 @@ class RootViewController: UIViewController {
             self.presentViewController( uac, animated:true) { () -> Void in
             }
         }
-        else {   // clear
+        else if btn.tag == 12{   // clear
             paintingView.clearData()
         }
-        
+        else {    // cancel
+            self.displaySettings(false)
+        }
     }
     
     //

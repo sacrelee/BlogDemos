@@ -87,7 +87,7 @@ class FMDBManager{
         return "insert into \(LineModelTableName)(paintingId, colorIndex, width, points) values(\(pId), \(lm.colorIndex), \(lm.width), \(pointsStr))"
     }
     
-    func getLineModelArray() -> [LineModel]?{
+    func getLineModelArray() -> [LineModel]? {
 
         let sql = "select * from \(LineModelTableName) where paintingId = 0"
         var models:[LineModel] = []
@@ -115,7 +115,7 @@ class FMDBManager{
         return models
     }
     
-    func executeSQL(SQLString sql:String) -> Bool{
+    func executeSQL(SQLString sql:String) -> Bool {
         
         var result = false
         fmdbQueue?.inDatabase(){
