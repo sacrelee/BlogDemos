@@ -9,7 +9,7 @@
 import UIKit
 
 
-class LineModel:NSObject{
+class LineModel: NSObject{
 
     static var lineWidth:CGFloat = 5.0
     static var lineColorIndex = 1

@@ -50,7 +50,7 @@ class RootViewController: UIViewController {
             settingBtn.tag = i + 10
             settingBtn.setTitle( i == 0 ? "设置": i == 1 ? "保存": "清空", forState: .Normal)
             settingBtn.setTitleColor( UIColor.blackColor(), forState: .Normal)
-            settingBtn.addTarget(self, action: "buttonClick:", forControlEvents: .TouchUpInside)
+            settingBtn.addTarget(self, action:#selector(RootViewController.buttonClick(_:)), forControlEvents: .TouchUpInside)
             settingBtn.snp_makeConstraints { (make) -> Void in
                 make.size.equalTo( CGSizeMake( 100, 50))
                 make.bottom.equalTo( -10)
@@ -93,7 +93,7 @@ class RootViewController: UIViewController {
         
         let topLabel = self.view.viewWithTag(20)!
         let eraserSwitch = UISwitch()
-        eraserSwitch.addTarget(self, action: "switchValueChanged:", forControlEvents:.ValueChanged)
+        eraserSwitch.addTarget(self, action:#selector(RootViewController.switchValueChanged(_:)), forControlEvents:.ValueChanged)
         eraserSwitch.tag = 30
         settingView.addSubview(eraserSwitch)
         eraserSwitch.snp_makeConstraints { (make) -> Void in
@@ -111,7 +111,7 @@ class RootViewController: UIViewController {
             slider.value = i == 0 ? Float(eraserWidth!): Float(lineWidth!)
             slider.minimumValue = i == 0 ? 10.0: 1.0
             slider.maximumValue = i == 0 ? 20.0: 6.0
-            slider.addTarget( self, action: "sliderValueChanged:", forControlEvents: .ValueChanged)
+            slider.addTarget( self, action:#selector(RootViewController.buttonClick(_:)), forControlEvents: .ValueChanged)
             slider.snp_makeConstraints { (make) -> Void in
                 make.top.equalTo( i == 0 ? eraserSwitch: self.view.viewWithTag(21)!).offset( i == 0 ? 0: -25)
                 make.left.equalTo( i == 0 ? eraserSwitch.snp_right: topLabel.snp_right).offset( i == 0 ? 20: 5)
@@ -133,7 +133,7 @@ class RootViewController: UIViewController {
             colorButton.layer.borderColor = i == 1 ? UIColor.grayColor().CGColor: UIColor.clearColor().CGColor
            colorButton.layer.masksToBounds = true
            colorButton.layer.cornerRadius = 7.0
-           colorButton.addTarget(self, action: "colorButtonClick:", forControlEvents: .TouchUpInside)
+           colorButton.addTarget(self, action: #selector(RootViewController.colorButtonClick(_:)), forControlEvents: .TouchUpInside)
            colorButton.snp_makeConstraints(closure: { (make) -> Void in
               make.size.equalTo(CGSizeMake( 35, 35))
               make.top.equalTo(lineSlider.snp_bottom).offset(20)
@@ -146,7 +146,7 @@ class RootViewController: UIViewController {
         cancelButton.tag = 60
         cancelButton.setTitle("取消", forState:.Normal)
         cancelButton.setTitleColor(UIColor(red:0.14, green:0.6, blue:0.93, alpha:1), forState: .Normal)
-        cancelButton.addTarget(self, action:"buttonClick:", forControlEvents:.TouchUpInside)
+        cancelButton.addTarget(self, action:#selector(RootViewController.buttonClick(_:)), forControlEvents:.TouchUpInside)
         cancelButton.snp_makeConstraints { (make) -> Void in
             make.size.equalTo(CGSizeMake( 80, 50))
             make.top.equalTo(topLabel).offset(-30)

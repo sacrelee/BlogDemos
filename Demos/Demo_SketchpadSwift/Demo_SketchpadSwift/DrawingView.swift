@@ -20,7 +20,7 @@ class DrawingView: UIView {
     init() {
         super.init(frame: CGRectZero)
         self.backgroundColor = UIColor.whiteColor()
-        let panGr = UIPanGestureRecognizer.init(target: self, action: "panInView:")
+        let panGr = UIPanGestureRecognizer.init(target: self, action:#selector(DrawingView.panInView(_:)))
         self.addGestureRecognizer(panGr)
     }
     
@@ -99,7 +99,8 @@ class DrawingView: UIView {
             CGContextMoveToPoint( contextRef, firstPoint.x, firstPoint.y)
             
             var lastPoint = firstPoint
-            for var i = 0; i < line.points.count; i++ {
+            
+            for i in 0 ..< line.points.count {
                let currentPoint = line.points[i]
                
                  CGContextAddQuadCurveToPoint( contextRef, lastPoint.x, lastPoint.y, ( currentPoint.x + lastPoint.x) / 2.0, ( currentPoint.y + lastPoint.y ) / 2.0)

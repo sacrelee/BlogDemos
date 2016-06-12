@@ -6,6 +6,7 @@
 //  Copyright © 2016年 SACRELEE. All rights reserved.
 //
 
+import Foundation
 import FMDB
 
 let LineModelTableName = "LinesDataTable"
@@ -73,7 +74,6 @@ class FMDBManager{
                 }
             }
         }
-        
         return success
     }
     
@@ -92,10 +92,18 @@ class FMDBManager{
         let sql = "select * from \(LineModelTableName) where paintingId = 0"
         var models:[LineModel] = []
 
+//        _ = ""
+        
         fmdbQueue?.inDatabase(){
            db in
            let resultSet = db.executeQuery( sql, withArgumentsInArray: nil)
             while resultSet.next(){
+                
+//                let cn = NSClassFromString(className) as! NSObject.Type
+//                let model = cn.init()
+                
+         
+         
                 let lm = LineModel()
                 lm.width = CGFloat(resultSet.doubleForColumn("width"))
                 lm.colorIndex = NSInteger(resultSet.intForColumn("colorIndex"))
@@ -109,6 +117,22 @@ class FMDBManager{
                    y = CGFloat((xy[1] as NSString).doubleValue)
                    lm.points.append(CGPointMake( x, y))
                 }
+                
+                let count = UnsafeMutablePointer<UInt32>.alloc(1)
+                count.initialize(0)
+                
+                let propertyList = class_copyPropertyList( lm.classForCoder, count)
+                
+                for i in 0...(Int(count.memory) - 1) {
+                    
+                    let char = property_getName(propertyList[Int(i)])
+                    print("Property---->\(NSString.init(UTF8String: char))")
+                    
+                    
+                    
+                }
+
+                
                 models.append(lm)
             }
         }
